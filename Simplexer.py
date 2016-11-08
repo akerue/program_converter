@@ -127,25 +127,26 @@ class Simplexer:
 
         self.lexer = lex.lex()
 
-    def analyze(self, program_file):
-        letterbook = []
+    def create_tokenbook(self, program_file):
+        tokenbook = []
         for l in program_file.readlines():
             self.lexer.input(l)
 
-            while True:
-                tok = self.lexer.token()
-                if not tok:
-                    break
-                # print(tok.type + "\t" + tok.value)
-                if tok.type in self.REPLACED_TOKEN:
-                    if tok.type == "NEWLINE":
-                        if len(letterbook) != 0 and letterbook[-1] != "NEWLINE":
-                            letterbook.append(tok.type)
-                        else:
-                            pass # 連続改行は無視
-                    else:
-                        letterbook.append(tok.type)
-                else:
-                    letterbook.append(tok.value)
+            for tok in self.lexer:
+                tokenbook.append(tok)
 
-        return letterbook
+        return tokenbook
+
+    def create_codebook(self, tokenbook):
+        codebook = []
+
+        for tok in tokenbook:
+            if not tok:
+                break
+            # print(tok.type + "\t" + tok.value)
+            if tok.type in self.REPLACED_TOKEN:
+                codebook.append(tok.type)
+            else:
+                codebook.append(tok.value)
+
+        return codebook

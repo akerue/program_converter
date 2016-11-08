@@ -53,16 +53,17 @@ if __name__ == "__main__":
         program_path_list = filter(lambda p: os.path.splitext(p)[1] == ".py",
                                        program_path_list)
 
-    letterbooks = []
+    codebooks = []
 
     for program_path in program_path_list:
         with open(program_path, "r") as f:
-            letterbooks.append(lexer.analyze(f))
+            tokenbook = lexer.create_tokenbook(f)
+            codebooks.append(lexer.create_codebook(tokenbook))
 
     if args.output_file is None:
-        print(letterbooks)
+        print(codebooks)
     else:
-        for letterbook in letterbooks:
-            for letter in letterbook:
-                args.output_file.write(letter + " ")
+        for codebook in codebooks:
+            for code in codebook:
+                args.output_file.write(code + " ")
             args.output_file.write("\n")
